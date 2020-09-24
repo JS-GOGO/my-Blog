@@ -1,0 +1,89 @@
+{{extend './common/layout.art'}} {{block 'main'}}
+
+<!-- 主体内容 -->
+
+{{include './common/header.art'}}
+
+
+<div class="content">
+    {{include './common/aside.art'}}
+    <div class="main">
+        <!-- 分类标题 -->
+        <div class="title">
+            <h4>5b9a716cb2d2bf17706bcc0a</h4>
+        </div>
+        <!-- /分类标题 -->
+        <!-- enctype="multipart/form-date" 因为表单提交附加了文件上传功能，所以必须把表单提交功能数据编码改为二进制 -->
+        <form class="form-container" action="/admin/article-add" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>标题</label>
+                <input type="text" class="form-control" name="title" placeholder="请输入文章标题">
+            </div>
+            <div class="form-group">
+                <label>作者</label>
+                <input type="text" class="form-control" name="author" value="{{@userInfo._id}}" readonly>
+            </div>
+            <div class="form-group">
+                <label>发布时间</label>
+                <input type="date" class="form-control" name="publishDate">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputFile">文章封面</label>
+                <!-- multiple 允许用户选择多个文件 -->
+                <input type="file" name="cover" id="file">
+                <div class="thumbnail-waper">
+                    <img class="img-thumbnail" src="" id="preview">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>内容</label>
+                <textarea class="form-control" id="editor" name="count"></textarea>
+            </div>
+            <div class="buttons">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+
+    </div>
+</div>
+<!-- /主体内容 -->
+{{/block}} {{block 'script'}}
+<script src="/admin/lib/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript">
+    // 问题：不知道这里是什么意思？视频也没讲
+    let editor;
+
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(newEditor => {
+            editor = newEditor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    // 获取数据
+    // const editorData = editor.getData();
+
+    //file是上传文件的控件
+    var file = document.querySelector('#file');
+    var preview = document.querySelector('#preview')
+        //当选择完文件的时候
+    file.onchange = function() {
+        //1. 创建文件读取对象
+        var reader = new FileReader();
+        //用户选择完文件的列表 是一个数值，不同方法可以选择多个文件
+        // console.log(this.files[0]);
+        //2. 读取文件第一个选择的文件 reader.readAsDataURL是一个异步函数，需要通过监听一个函数获得返回值
+        reader.readAsDataURL(this.files[0]);
+        // 3. 监听onload事件 onload 事件会在页面或图像加载（读取）完成后立即发生。
+        reader.onload = function() {
+            // 这是读取文件的数据码，可以放在src中使用
+            // console.log(reader.result);
+            //4. 将读取的文件的结果渲染到页面中
+            preview.src = reader.result;
+        }
+    }
+</script>
+{{/block}}

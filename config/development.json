@@ -1,0 +1,10 @@
+{
+    "db": {
+        "user": "itcast",
+        "pwd": "itcast",
+        "host": "localhost",
+        "prot": "27017",
+        "name": "blog"
+    }
+
+}
